@@ -20,8 +20,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Match everything EXCEPT the proxy's own static assets
-    "/((?!_next/static|favicon.ico).*)",
-  ],
+  matcher: "/:path*",
 };
