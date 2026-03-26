@@ -9,13 +9,14 @@ export function proxy(req: NextRequest) {
         return new NextResponse("Not found", { status: 404 });
     }
     
-    const target = new URL(
-        `${req.nextUrl.pathname}${req.nextUrl.search}`,
-        // <data>.p.bhaskarapp.com -> <data>-db-digital.vercel.app
-        `https://${subdomain}-db-digital.vercel.app`
-    );
+   const target = new URL(
+    `${req.nextUrl.pathname}${req.nextUrl.search}`,
+    // <data>.p.bhaskarapp.com -> <data>-db-digital.vercel.app
+    `https://${subdomain}-db-digital.vercel.app`
+  );
 
-    return NextResponse.rewrite(target);
+  console.log("Rewriting to:", target.toString());
+  return NextResponse.rewrite(target);
 }
 
 export const config = {
