@@ -1,6 +1,17 @@
 // proxy.ts
 import { NextRequest, NextResponse } from "next/server"
 
+const rewrites = [
+  {
+    sourceSuffix: ".p.bhaskarapp.com",
+    targetDomain: "-db-digital.vercel.app",
+  },
+  {
+    sourceSuffix: ".s.bhaskarapp.com",
+    targetDomain: ".vercel.run",
+  },
+] as const
+
 export function proxy(req: NextRequest) {
   const hostname = (req.headers.get("host") || "").split(":")[0]
 
@@ -8,11 +19,15 @@ export function proxy(req: NextRequest) {
     return NextResponse.next()
   }
 
-  if (!hostname.endsWith(".p.bhaskarapp.com")) {
+  const rewrite = rewrites.find(({ sourceSuffix }) =>
+    hostname.endsWith(sourceSuffix)
+  )
+
+  if (!rewrite) {
     return NextResponse.next()
   }
 
-  const subdomain = hostname.slice(0, -".p.bhaskarapp.com".length)
+  const subdomain = hostname.slice(0, -rewrite.sourceSuffix.length)
 
   if (!subdomain) {
     return NextResponse.next()
@@ -20,7 +35,7 @@ export function proxy(req: NextRequest) {
 
   const target = new URL(
     `${req.nextUrl.pathname}${req.nextUrl.search}`,
-    `https://${subdomain}-db-digital.vercel.app`
+    `https://${subdomain}${rewrite.targetDomain}`
   )
 
   return NextResponse.rewrite(target)
