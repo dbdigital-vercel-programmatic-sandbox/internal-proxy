@@ -1,0 +1,34 @@
+:root {
+  --non-shareable-banner-height: 40px;
+}
+
+html {
+  scroll-padding-top: var(--non-shareable-banner-height);
+}
+
+body {
+  padding-top: var(--non-shareable-banner-height) !important;
+}
+
+body::before {
+  content: "This is not a sharable link";
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2147483647;
+  display: flex;
+  height: var(--non-shareable-banner-height);
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  background: #dc2626;
+  color: #fff;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  pointer-events: none;
+  text-align: center;
+}

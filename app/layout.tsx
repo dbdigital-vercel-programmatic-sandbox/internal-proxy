@@ -1,5 +1,4 @@
 import { Geist_Mono, Inter } from "next/font/google"
-import { headers } from "next/headers"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -12,17 +11,11 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const requestHeaders = await headers()
-  const forwardedHost = requestHeaders.get("x-forwarded-host") ?? ""
-  const host = forwardedHost || requestHeaders.get("host") || ""
-  const hostname = host.split(",")[0]?.trim().split(":")[0] ?? ""
-  const showNonSharableBanner = hostname.endsWith(".s.bhaskarapp.com")
-
   return (
     <html
       lang="en"
@@ -35,16 +28,7 @@ export default async function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          {showNonSharableBanner ? (
-            <div className="fixed top-0 right-0 left-0 z-50 bg-red-600 px-4 py-2 text-center text-sm font-semibold text-white">
-              This is not a sharable link
-            </div>
-          ) : null}
-          <div className={showNonSharableBanner ? "pt-10" : undefined}>
-            {children}
-          </div>
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )
