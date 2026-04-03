@@ -17,8 +17,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const host = (await headers()).get("host") ?? ""
-  const hostname = host.split(":")[0]
+  const requestHeaders = await headers()
+  const forwardedHost = requestHeaders.get("x-forwarded-host") ?? ""
+  const host = forwardedHost || requestHeaders.get("host") || ""
+  const hostname = host.split(",")[0]?.trim().split(":")[0] ?? ""
   const showNonSharableBanner = hostname.endsWith(".s.bhaskarapp.com")
 
   return (
